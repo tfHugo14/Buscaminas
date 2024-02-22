@@ -31,6 +31,18 @@ public class BuscaMinas {
     public void empezarJuego(){
         plantarMinas();
         colocarNumeros();
+        abrirPrimeraCasillaVacia();
+    }
+
+    private void abrirPrimeraCasillaVacia(){
+        for (int i = 0; i < 8; i++){
+            for (int j = 0; j < 8; j++){
+                if (campoDeMinas[i][j] == '-'){
+                    destaparCasilla(i, j);
+                    return;
+                }
+            }
+        }
     }
 
     private void plantarMinas(){
@@ -49,12 +61,12 @@ public class BuscaMinas {
         for (int i = 0; i < 8; i++){
             for (int j = 0; j < 8; j++){
                 if (campoDeMinas[i][j] == '\u0000')
-                    campoDeMinas[i][j] = numeroMinas(i,j);
+                    campoDeMinas[i][j] = cuantasMinasRodenLaCasilla(i,j);
             }
         }
     }
 
-    private char numeroMinas(int fila, int columna){
+    private char cuantasMinasRodenLaCasilla(int fila, int columna){
         //recorre alrededor de la casilla para saber cuantas minas le rodean
         int minas = 0;
         for (int i = fila - 1; i <= fila + 1; i++){
@@ -70,20 +82,25 @@ public class BuscaMinas {
         if (minas > 0)
             return (char) (minas + '0');
         else
-            return '_';
+            return '-';
     }
 
-    public void destaparCasilla(int fila, int columna){
-        if (campoDeMinas[fila][columna] == '_'){
+    public void marcarCasilla(int fila, int columna){
+        tablero[fila][columna] = 'M';
+    }
+
+    public boolean destaparCasilla(int fila, int columna){
+        if (campoDeMinas[fila][columna] == '-'){
             destaparAdyacentes(fila, columna);
-            //tablero[fila][columna] = '_';
+            return true;
         }
         else if (campoDeMinas[fila][columna] == '*'){
             tablero[fila][columna] = campoDeMinas[fila][columna];
+            return false;
         }
         else {
-            // si la casilla tiene un numero, destapamos solo esa casilla
             tablero[fila][columna] = campoDeMinas[fila][columna];
+            return true;
         }
     }
 
@@ -91,13 +108,12 @@ public class BuscaMinas {
         for (int i = fila - 1; i <= fila + 1; i++){
             for (int j = columna - 1; j <= columna + 1; j++){
                 if (i >= 0 && i < 8 && j >= 0 && j < 8){ // evitar index out of bounds
-                    if (campoDeMinas[i][j] == '_'){
+                    if (campoDeMinas[i][j] == '-'){
                         tablero[i][j] = campoDeMinas[i][j];
-                        campoDeMinas[i][j] = 'd'; // marcamos la casilla como destapada
+                        campoDeMinas[i][j] = '_'; // marcamos la casilla destapada con otro caracter para no destaparla 2 veces
                         destaparAdyacentes(i, j);
                     }
                     else {
-                        // si la casilla tiene un numero, destapamos solo esa casilla
                         tablero[i][j] = campoDeMinas[i][j];
                     }
                 }
