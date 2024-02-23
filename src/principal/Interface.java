@@ -8,44 +8,48 @@ public class Interface {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         Interface ic = new Interface();
-        BuscaMinas bm = new BuscaMinas();
-
+        BuscaMinas bm = new BuscaMinas(10);
+        int fila;
+        int columna;
         String verde = "\u001B[32m";
         String rojo = "\u001B[31m";
         String violeta = "\u001B[35m";
         String reset = "\u001B[0m";
 
-        // texto irrelevante e inicializacion del juego
+        /* texto de como jugar e inicializacion del juego */
         System.out.println(verde+"Bienvenido al juego del Buscaminas!"+reset);
         System.out.println("Este tablero de 8x8 es donde jugarás: ");
         ic.printTablero(bm);
         bm.empezarJuego();
         System.out.println(
                 "\n"+verde+"Como Jugar: \n"+reset+
-                "Elige una casilla para destapar, si destapas una "+rojo+"Mina"+reset+" pierdes. \n" +
-                "Si destapas una "+verde+"casilla vacia"+reset+", se destaparan las casillas adyacentes. \n" +
-                "Si destapas una casilla con un "+violeta+"numero"+reset+", este te indicara cuantas minas hay alrededor. \n" +
-                "Tu objetivo es destapar todas las casillas sin encontrar ninguna mina, Buena suerte! \n"
+                        "Elige una casilla para destapar, si destapas una "+rojo+"Mina"+reset+" pierdes. \n" +
+                        "Si destapas una "+verde+"casilla vacia"+reset+", se destaparan las casillas adyacentes. \n" +
+                        "Si destapas una casilla con un "+violeta+"numero"+reset+", este te indicara cuantas minas hay alrededor. \n" +
+                        "Tu objetivo es destapar todas las casillas sin encontrar ninguna mina, Buena suerte! \n"
         );
-        System.out.println("Vamos a abir una casilla vacia para empezar el juego:");
+        System.out.println("Este tablero tiene "+verde+bm.getNumMinas()+reset+" minas. Vamos a abir una casilla vacia para empezar el juego:");
         ic.printTablero(bm);
+        System.out.println();
 
-        // bucle del juego
+        /* bucle principal del juego */
         String accionJugador = ""; String resultadoPartida = "";
         while (!accionJugador.equalsIgnoreCase("S")) {
             System.out.println("Que quieres hacer, destapar una casilla [" + verde + "D" + reset + "], marcar una mina [" + rojo + "M" + reset + "] o salir del juego [" + violeta + "S" + reset + "]?");
             accionJugador = input.next();
             if (accionJugador.equalsIgnoreCase("D")) {
                 System.out.println("Introduce la fila y columna de la casilla que quieres " + verde + "Destapar" + reset + " [1 - 8]:");
-                int fila = input.nextInt();
-                int columna = input.nextInt();
+                fila = input.nextInt();
+                columna = input.nextInt();
                 if ( !bm.destaparCasilla(fila - 1, columna - 1) ){ resultadoPartida="Derrota"; break;}
+                // en caso false se destapó una mina y se perdió el juego
                 ic.printTablero(bm);
             } else if (accionJugador.equalsIgnoreCase("M")) {
                 System.out.println("Introduce la fila y columna de la casilla que quieres " + rojo + "Marcar" + reset + " [1 - 8]:");
-                int fila = input.nextInt();
-                int columna = input.nextInt();
-                bm.marcarCasilla(fila - 1, columna - 1);
+                fila = input.nextInt();
+                columna = input.nextInt();
+                if ( bm.marcarCasilla(fila - 1, columna - 1) == bm.getNumMinas() ){ resultadoPartida="Victoria"; break;}
+                // cuanto todas las minas están marcadas se gana el juego
                 ic.printTablero(bm);
             } else if (!accionJugador.equalsIgnoreCase("s")){
                 System.out.println(rojo + "Esa accion no es valida! cerrando el juego..." + reset);
@@ -54,7 +58,12 @@ public class Interface {
         }
         if ( resultadoPartida.equals("Derrota") ){
             System.out.println("###################################################");
-            System.out.println("   "+rojo+"La partida ha terminado, has pisado una mina"+reset+"      ");
+            System.out.println("    "+rojo+"La partida ha terminado, has pisado una mina"+reset+"      ");
+            System.out.println("###################################################");
+            ic.printTablero(bm);
+        } else if (resultadoPartida.equals("Victoria")) {
+            System.out.println("###################################################");
+            System.out.println("     " +verde+"Felicidades, has marcado todas las minas!"+reset+"      ");
             System.out.println("###################################################");
             ic.printTablero(bm);
         }
