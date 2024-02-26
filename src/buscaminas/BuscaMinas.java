@@ -4,28 +4,35 @@ import java.util.Random;
 
 public class BuscaMinas {
     Random random = new Random();
+    private int numMinas = 10;
+    private int minasMarcadas = 0;
     private char[][] campoDeMinas = new char[8][8];
     private char[][] tablero =
-    {
-        {'█','█','█','█','█','█','█','█',},
-        {'█','█','█','█','█','█','█','█',},
-        {'█','█','█','█','█','█','█','█',},
-        {'█','█','█','█','█','█','█','█',},
-        {'█','█','█','█','█','█','█','█',},
-        {'█','█','█','█','█','█','█','█',},
-        {'█','█','█','█','█','█','█','█',},
-        {'█','█','█','█','█','█','█','█',},
-    };
+            {
+                    {'█','█','█','█','█','█','█','█',},
+                    {'█','█','█','█','█','█','█','█',},
+                    {'█','█','█','█','█','█','█','█',},
+                    {'█','█','█','█','█','█','█','█',},
+                    {'█','█','█','█','█','█','█','█',},
+                    {'█','█','█','█','█','█','█','█',},
+                    {'█','█','█','█','█','█','█','█',},
+                    {'█','█','█','█','█','█','█','█',},
+            };
 
+    public BuscaMinas() {}
+    public BuscaMinas(int numMinas) {
+        this.numMinas = numMinas;
+    }
+
+    public int getNumMinas() {
+        BuscaMinas bm = new BuscaMinas();
+        bm.numMinas = this.numMinas;
+        return numMinas;
+    }
     public char[][] getTablero() {
         BuscaMinas bm = new BuscaMinas();
         bm.tablero = this.tablero;
         return bm.tablero;
-    }
-    public char[][] getCampoDeMinas() {
-        BuscaMinas bm = new BuscaMinas();
-        bm.campoDeMinas = this.campoDeMinas;
-        return bm.campoDeMinas;
     }
 
     public void empezarJuego(){
@@ -48,7 +55,6 @@ public class BuscaMinas {
     private void plantarMinas(){
         int minaX;
         int minaY;
-        int numMinas = 10;
 
         for (int j = 0; j < numMinas; j++) {
             minaX = random.nextInt(8);
@@ -60,7 +66,7 @@ public class BuscaMinas {
     private void colocarNumeros(){
         for (int i = 0; i < 8; i++){
             for (int j = 0; j < 8; j++){
-                if (campoDeMinas[i][j] == '\u0000')
+                if (campoDeMinas[i][j] == '\u0000') // si el caracter es 'null'
                     campoDeMinas[i][j] = cuantasMinasRodenLaCasilla(i,j);
             }
         }
@@ -85,8 +91,12 @@ public class BuscaMinas {
             return '-';
     }
 
-    public void marcarCasilla(int fila, int columna){
+    public int marcarCasilla(int fila, int columna){
         tablero[fila][columna] = 'M';
+        if (campoDeMinas[fila][columna] == '*'){
+            minasMarcadas++;
+        }
+        return minasMarcadas;
     }
 
     public boolean destaparCasilla(int fila, int columna){
@@ -120,4 +130,5 @@ public class BuscaMinas {
             }
         }
     }
+
 }
