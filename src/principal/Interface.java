@@ -8,7 +8,7 @@ public class Interface {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         Interface ic = new Interface();
-        BuscaMinas bm = new BuscaMinas(10);
+        BuscaMinas bm = new BuscaMinas(4);
         int fila;
         int columna;
         String verde = "\u001B[32m";
