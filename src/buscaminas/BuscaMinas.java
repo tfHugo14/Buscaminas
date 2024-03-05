@@ -27,12 +27,16 @@ public class BuscaMinas {
     public int getNumMinas() {
         BuscaMinas bm = new BuscaMinas();
         bm.numMinas = this.numMinas;
-        return numMinas;
+        return bm.numMinas;
     }
+
     public char[][] getTablero() {
-        BuscaMinas bm = new BuscaMinas();
-        bm.tablero = this.tablero;
-        return bm.tablero;
+        //crear array copia del tablero
+        char[][] tableroCopia = new char[8][8];
+        for (int i = 0; i < 8; i++){
+            System.arraycopy(this.tablero[i], 0, tableroCopia[i], 0, 8);
+        }
+        return tableroCopia;    // retornar la copia
     }
 
     public void empezarJuego(){
